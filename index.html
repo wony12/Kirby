@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>윤지원 · YOON JIWON</title>
+<style>
+@import url('https://cdn.jsdelivr.net/npm/galmuri/dist/galmuri.css');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+:root{
+  --pink-bg1:#ffe9f4;
+  --pink-bg2:#ffd3ea;
+  --pink-main:#ff8fc2;
+  --pink-dark:#ff5fa8;
+  --pink-deep:#d63384;
+  --sky:#8fd9ff;
+  --sky-dark:#3fa9e0;
+  --yellow:#ffe066;
+  --yellow-dark:#f5b400;
+  --mint:#9df2d9;
+  --mint-dark:#3fcf9f;
+  --ink:#4a2f5c;
+  --white:#fffaf5;
+}
+
+*{ box-sizing:border-box; image-rendering:pixelated; }
+html,body{ margin:0; padding:0; overflow-x:hidden; width:100%; }
+body{
+  min-height:100vh;
+  font-family:'Galmuri11','Press Start 2P',monospace;
+  background:linear-gradient(180deg,var(--pink-bg1) 0%,var(--pink-bg2) 55%,var(--sky) 140%);
+  color:var(--ink);
+  position:relative;
+  line-height:1.5;
+}
+
+.font-en{ font-family:'Press Start 2P',monospace; }
+
+/* ---------- 배경 장식 ---------- */
+#bgDeco{ position:fixed; inset:0; overflow:hidden; z-index:0; pointer-events:none; }
+.deco-star{ position:absolute; color:var(--yellow); text-shadow:0 0 4px rgba(255,224,102,.8); animation:twinkle 2.6s ease-in-out infinite; }
+.deco-cloud{ position:absolute; color:#ffffff; opacity:.75; font-size:2rem; animation:driftX 20s ease-in-out infinite; text-shadow:2px 2px 0 rgba(255,180,220,.4); }
+.deco-heart{ position:absolute; color:var(--pink-dark); opacity:.85; animation:riseFade 7s ease-in infinite; }
+
+@keyframes twinkle{ 0%,100%{ opacity:.25; transform:scale(.8);} 50%{ opacity:1; transform:scale(1.15);} }
+@keyframes driftX{ 0%,100%{ transform:translateX(0);} 50%{ transform:translateX(24px);} }
+@keyframes riseFade{ 0%{ transform:translateY(0) translateX(0); opacity:0;} 15%{opacity:.9;} 100%{ transform:translateY(-140px) translateX(12px); opacity:0;} }
+
+/* ---------- 메인 윈도우 ---------- */
+.game-window{
+  position:relative;
+  z-index:2;
+  max-width:560px;
+  margin:36px auto;
+  background:var(--white);
+  border:6px solid var(--ink);
+  box-shadow:8px 8px 0 var(--ink);
+  padding:30px 24px 36px;
+}
+.corner-star{ position:absolute; font-size:1.1rem; color:var(--yellow-dark); animation:twinkle 1.8s ease-in-out infinite; }
+.corner-star.tl{ top:-14px; left:-14px; }
+.corner-star.tr{ top:-14px; right:-14px; animation-delay:.3s; }
+.corner-star.bl{ bottom:-14px; left:-14px; animation-delay:.6s; }
+.corner-star.br{ bottom:-14px; right:-14px; animation-delay:.9s; }
+
+/* ---------- 마스코트 (커비) ---------- */
+.mascot-wrap{ display:flex; justify-content:center; margin-bottom:6px; }
+.mascot{
+  width:150px; height:150px;
+  object-fit:contain;
+  filter:drop-shadow(4px 6px 0 rgba(74,47,92,.18));
+  animation:bounce 2.2s ease-in-out infinite;
+}
+@keyframes bounce{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-8px);} }
+
+/* ---------- 타이틀 ---------- */
+.title{
+  text-align:center;
+  font-size:clamp(1.5rem,6vw,2.1rem);
+  margin:8px 0 0;
+  letter-spacing:2px;
+  color:var(--pink-deep);
+  text-shadow:3px 3px 0 var(--pink-bg2);
+}
+.title-en{
+  display:block;
+  font-family:'Press Start 2P',monospace;
+  font-size:clamp(.55rem,2.5vw,.8rem);
+  color:var(--sky-dark);
+  margin-top:8px;
+  letter-spacing:2px;
+}
+.tagline-wrap{ text-align:center; margin:16px 0 22px; }
+.tagline{
+  display:inline-block;
+  font-size:.85rem;
+  background:var(--mint);
+  border:3px solid var(--ink);
+  box-shadow:3px 3px 0 var(--ink);
+  padding:8px 16px;
+}
+
+/* ---------- 대화상자 ---------- */
+.dialogue-box{
+  background:var(--white);
+  border:4px solid var(--ink);
+  box-shadow:5px 5px 0 var(--ink);
+  padding:16px 18px 24px;
+  position:relative;
+  margin:0 0 30px;
+  font-size:.82rem;
+  line-height:1.8;
+}
+.dialogue-box::before{
+  content:"About Me";
+  position:absolute;
+  top:-13px; left:12px;
+  background:var(--yellow);
+  border:3px solid var(--ink);
+  font-family:'Press Start 2P',monospace;
+  font-size:.55rem;
+  padding:2px 8px;
+}
+.dialogue-box .prompt{
+  position:absolute; right:14px; bottom:8px;
+  color:var(--pink-deep);
+  animation:blink 1s steps(1) infinite;
+}
+@keyframes blink{ 50%{ opacity:0; } }
+
+/* ---------- 커비 스프라이트 (클릭 애니메이션) ---------- */
+.kirby-sprite-section{ text-align:center; margin:0 0 30px; }
+.kirby-sprite-wrap{
+  display:inline-flex;
+  align-items:center; justify-content:center;
+  background:var(--white);
+  border:4px solid var(--ink);
+  box-shadow:5px 5px 0 var(--ink);
+  padding:16px 26px;
+  transition:transform .08s, box-shadow .08s;
+}
+.kirby-sprite-wrap:hover{ transform:translate(-2px,-2px); box-shadow:7px 7px 0 var(--ink); }
+.kirby-sprite{
+  width:110px; height:115px;
+  object-fit:contain;
+}
+.kirby-sprite:focus-visible{
+  outline:3px dashed var(--pink-dark);
+  outline-offset:3px;
+}
+.kirby-sprite-hint{
+  font-family:'Press Start 2P',monospace;
+  font-size:.85rem;
+  color:var(--sky-dark);
+  margin:20px 0 0;
+  animation:blink 1s steps(1) infinite;
+}
+
+/* ---------- 섹션 타이틀 ---------- */
+.section-title{
+  text-align:center;
+  font-family:'Press Start 2P',monospace;
+  font-size:clamp(.75rem,3vw,.95rem);
+  color:var(--pink-deep);
+  margin:0 0 18px;
+  letter-spacing:1px;
+}
+.section-title span{ color:var(--yellow-dark); }
+
+/* ---------- 취미 카드 ---------- */
+.hobby-section{ margin-bottom:32px; }
+.hobby-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(128px,1fr));
+  gap:14px;
+}
+.hobby-card{
+  background:var(--white);
+  border:4px solid var(--ink);
+  box-shadow:4px 4px 0 var(--ink);
+  padding:16px 10px 14px;
+  text-align:center;
+  cursor:pointer;
+  transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.hobby-card:hover{
+  transform:translate(-2px,-6px) scale(1.05);
+  box-shadow:6px 10px 0 var(--pink-dark);
+  border-color:var(--pink-dark);
+}
+.hobby-card:focus-visible{
+  outline:3px dashed var(--pink-dark);
+  outline-offset:3px;
+}
+.hobby-icon{
+  display:inline-block;
+  font-size:1.9rem;
+  margin-bottom:8px;
+  background:var(--pink-bg1);
+  border:3px solid var(--ink);
+  width:52px; height:52px;
+  line-height:46px;
+}
+.hobby-name{ font-size:.82rem; margin:2px 0 6px; font-weight:bold; }
+.hobby-desc{ font-size:.62rem; color:#7a5c8a; line-height:1.5; }
+
+/* ---------- 취미 모달 ---------- */
+.modal-overlay{
+  position:fixed; inset:0;
+  background:rgba(74,47,92,.55);
+  display:none;
+  align-items:center; justify-content:center;
+  padding:20px;
+  z-index:50;
+}
+.modal-overlay.open{ display:flex; }
+
+.hobby-modal{
+  position:relative;
+  background:var(--white);
+  border:6px solid var(--ink);
+  box-shadow:8px 8px 0 var(--ink);
+  width:100%; max-width:380px;
+  max-height:86vh;
+  padding:22px 20px 26px;
+  animation:popIn .18s ease-out;
+}
+.hobby-modal-body{
+  max-height:calc(86vh - 48px);
+  overflow-y:auto;
+}
+@keyframes popIn{ 0%{ transform:scale(.85); opacity:0;} 100%{ transform:scale(1); opacity:1;} }
+
+.hobby-modal-img-wrap{
+  border:4px solid var(--ink);
+  box-shadow:4px 4px 0 var(--ink);
+  overflow:hidden;
+  margin-bottom:16px;
+  background:var(--pink-bg1);
+}
+.hobby-modal-img{ width:100%; height:auto; display:block; }
+
+.hobby-modal-title{
+  text-align:center;
+  font-size:.95rem;
+  color:var(--pink-deep);
+  margin:0 0 12px;
+}
+.hobby-modal-text{
+  font-size:.72rem;
+  line-height:1.9;
+  margin:0;
+}
+
+/* ---------- 연락처 ---------- */
+.contact-section{ text-align:center; margin-bottom:6px; }
+.contact-buttons{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+.pixel-btn{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:'Press Start 2P',monospace;
+  font-size:.62rem;
+  color:var(--ink);
+  text-decoration:none;
+  background:var(--yellow);
+  border:4px solid var(--ink);
+  box-shadow:4px 4px 0 var(--ink);
+  padding:14px 18px;
+  transition:transform .08s, box-shadow .08s, background .12s;
+}
+.pixel-btn:hover{ transform:translate(-2px,-2px); box-shadow:6px 6px 0 var(--ink); background:var(--mint); }
+.pixel-btn:active{ transform:translate(4px,4px); box-shadow:0 0 0 var(--ink); }
+.pixel-btn.alt{ background:var(--sky); }
+.pixel-btn.alt:hover{ background:var(--pink-main); color:var(--white); }
+
+/* ---------- 푸터 ---------- */
+.footer{ text-align:center; margin-top:34px; font-size:.65rem; color:#a583b8; }
+.heart-beat{ display:inline-block; color:var(--pink-dark); animation:heartbeat 1.1s ease-in-out infinite; }
+@keyframes heartbeat{ 0%,100%{ transform:scale(1);} 50%{ transform:scale(1.3);} }
+
+/* ---------- 커스텀 커서 ---------- */
+@media (pointer:fine){
+  *{ cursor:none !important; }
+}
+#customCursor{
+  position:fixed;
+  top:0; left:0;
+  width:56px;
+  z-index:999;
+  pointer-events:none;
+  display:none;
+}
+
+@media (max-width:480px){
+  .game-window{ margin:18px 12px; padding:24px 16px 30px; }
+  .mascot{ width:128px; height:112px; }
+}
+</style>
+</head>
+<body>
+
+<div id="bgDeco"></div>
+
+<main class="game-window">
+  <span class="corner-star tl">★</span>
+  <span class="corner-star tr">★</span>
+  <span class="corner-star bl">★</span>
+  <span class="corner-star br">★</span>
+
+  <div class="mascot-wrap">
+    <img src="assets/gif1-transparent.webp" alt="커비" class="mascot" id="mascot">
+  </div>
+
+  <h1 class="title">윤지원<span class="title-en">YOON JIWON</span></h1>
+
+  <div class="tagline-wrap">
+    <p class="tagline">"모두들 방가방가"</p>
+  </div>
+
+  <section class="dialogue-box">
+    <p>2002년 1월 2일생
+    <br/>MBTI는 몇 년째 ISFJ였는데 최근 2년 사이 ISTJ로 나오는 중. 
+    <br/>근데 그냥 ISFJ라고 하고 다녀요~
+    <br/>현재는 UXUI 공부중~
+    </p>
+    <span class="prompt">▼</span>
+  </section>
+
+  <section class="hobby-section">
+    <h2 class="section-title"><span>★</span> HOBBY <span>★</span></h2>
+    <div class="hobby-grid">
+      <div class="hobby-card" data-hobby="overwatch" tabindex="0" role="button">
+        <span class="hobby-icon">🎮</span>
+        <p class="hobby-name">오버워치</p>
+        <p class="hobby-desc">수수께끼모드를 주로 함 <br/>본캐는 힐러 키리코</p>
+      </div>
+      <div class="hobby-card" data-hobby="cookierun" tabindex="0" role="button">
+        <span class="hobby-icon">🍪</span>
+        <p class="hobby-name">쿠키런 킹덤</p>
+        <p class="hobby-desc">21년 1월부터 했으나 1년 반 권태기가 있었음. <br/>어제 5,300원 현질했지롱</p>
+      </div>
+      <div class="hobby-card" data-hobby="kirby" tabindex="0" role="button">
+        <span class="hobby-icon">⭐</span>
+        <p class="hobby-name">커친자</p>
+        <p class="hobby-desc">"커비에미친자" 인형 7개, <br/>피규어는 셀 수 없이 많음</p>
+      </div>
+      <div class="hobby-card" data-hobby="drama" tabindex="0" role="button">
+        <span class="hobby-icon">📺</span>
+        <p class="hobby-name">인생 드라마</p>
+        <p class="hobby-desc">도깨비 6회, 사내맞선 4회. <br/>13시간 비행도 사내맞선과 함께</p>
+      </div>
+      <div class="hobby-card" data-hobby="music" tabindex="0" role="button">
+        <span class="hobby-icon">🎧</span>
+        <p class="hobby-name">음악 취향</p>
+        <p class="hobby-desc">2010s 팝송/케이팝만 들어서 틀이라는 소리 들음. <br/>요즘은 J-POP도 맛보는 중, '만찬가' 좋더라고</p>
+      </div>
+      <div class="hobby-card" data-hobby="travel" tabindex="0" role="button">
+        <span class="hobby-icon">✈️</span>
+        <p class="hobby-name">여행</p>
+        <p class="hobby-desc">집순이지만 누가 끌고 가면 무조건 따라나섬</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="hobby-section">
+    <h2 class="section-title"><span>★</span> Play with Kirby <span>★</span></h2>
+    <section class="kirby-sprite-section">
+      <div class="kirby-sprite-wrap">
+        <img id="kirbySprite" class="kirby-sprite" src="assets/kirby-anim/frame03.png" alt="커비 스프라이트, 클릭하면 움직여요" tabindex="0" role="button">
+      </div>
+      <p class="kirby-sprite-hint">TAP ME!</p>
+    </section>
+  </section>
+
+  <section class="contact-section">
+    <h2 class="section-title">CONTACT</h2>
+    <div class="contact-buttons">
+      <a class="pixel-btn" href="https://www.instagram.com/ji1_eee/" target="_blank" rel="noopener noreferrer">📷 INSTAGRAM</a>
+      <a class="pixel-btn alt" href="https://www.linkedin.com/in/jiwonyy/" target="_blank" rel="noopener noreferrer">💼 LINKEDIN</a>
+    </div>
+  </section>
+</main>
+
+<div class="modal-overlay" id="hobbyModalOverlay">
+  <div class="hobby-modal" role="dialog" aria-modal="true" aria-labelledby="hobbyModalTitle" tabindex="-1">
+    <div class="hobby-modal-body">
+      <div class="hobby-modal-img-wrap">
+        <img class="hobby-modal-img" id="hobbyModalImg" src="" alt="">
+      </div>
+      <h3 class="hobby-modal-title" id="hobbyModalTitle"></h3>
+      <p class="hobby-modal-text" id="hobbyModalText"></p>
+    </div>
+  </div>
+</div>
+
+<img id="customCursor" src="assets/cursor.png" alt="">
+
+<script>
+// 배경 장식(별/구름/하트) 랜덤 생성
+(function(){
+  const wrap = document.getElementById('bgDeco');
+  const stars = ['★','☆','✦'];
+
+  for(let i=0;i<22;i++){
+    const s = document.createElement('span');
+    s.className = 'deco-star';
+    s.textContent = stars[Math.floor(Math.random()*stars.length)];
+    s.style.left = Math.random()*100 + '%';
+    s.style.top = Math.random()*100 + '%';
+    s.style.fontSize = (0.6 + Math.random()*1.2) + 'rem';
+    s.style.animationDelay = (Math.random()*2.5) + 's';
+    wrap.appendChild(s);
+  }
+
+  for(let i=0;i<5;i++){
+    const c = document.createElement('span');
+    c.className = 'deco-cloud';
+    c.textContent = '☁';
+    c.style.left = Math.random()*90 + '%';
+    c.style.top = (5 + Math.random()*80) + '%';
+    c.style.fontSize = (1.4 + Math.random()*1.6) + 'rem';
+    c.style.animationDelay = (Math.random()*4) + 's';
+    wrap.appendChild(c);
+  }
+
+  for(let i=0;i<7;i++){
+    const h = document.createElement('span');
+    h.className = 'deco-heart';
+    h.textContent = '♥';
+    h.style.left = Math.random()*100 + '%';
+    h.style.bottom = '-20px';
+    h.style.fontSize = (0.8 + Math.random()*1) + 'rem';
+    h.style.animationDelay = (Math.random()*6) + 's';
+    wrap.appendChild(h);
+  }
+})();
+
+// 취미 카드 클릭 -> 모달(사진+텍스트) 표시
+(function(){
+  const hobbyData = {
+    overwatch: {
+      title: '🎮 오버워치',
+      img: 'assets/캣냥이.jpeg',
+      text: '같이 하실 분 구합니다냥!'
+    },
+    cookierun: {
+      title: '🍪 쿠키런 킹덤',
+      img: 'assets/담비.gif',
+      text: '최애 쿠키는 생크림담비 쿠키! 겁나 약한데 귀엽습니다'
+    },
+    kirby: {
+      title: '⭐ 커친자',
+      img: 'assets/gif 2.gif',
+      text: '내 방에 있는 걸 찍어서 올리고 싶은데, 사진이 없어서 아쉽네^^'
+    },
+    drama: {
+      title: '📺 인생 드라마',
+      img: 'assets/사내맞선 안효섭.jpeg',
+      text: '런닝머신 탈 때 사내맞선을 봐야 시간이 살살 녹음;; <br/> 대유잼이니까 안본사람들 제발 봐.'
+    },
+    music: {
+      title: '🎧 음악 취향',
+      img: 'assets/만찬가.jpeg',
+      text: '[만찬가] 리센느 미나미가 부르는 거 보고 꽂힌 jpop'
+    },
+    travel: {
+      title: '✈️ 여행',
+      img: 'assets/여행사진.jpg',
+      text: '이건 제일 최근에 다녀온 호주! <br/>가 본 나라 : 중국 / 필리핀 / 태국 / 미국 / 캐나다 / 일본 / 호주 / 네덜란드(경유) '
+    }
+  };
+
+  const overlay = document.getElementById('hobbyModalOverlay');
+  const modal = overlay.querySelector('.hobby-modal');
+  const modalImg = document.getElementById('hobbyModalImg');
+  const modalTitle = document.getElementById('hobbyModalTitle');
+  const modalText = document.getElementById('hobbyModalText');
+  let lastFocused = null;
+
+  function openHobbyModal(key){
+    const data = hobbyData[key];
+    if(!data) return;
+    modalImg.src = data.img;
+    modalImg.alt = data.title;
+    modalTitle.textContent = data.title;
+    modalText.innerHTML = data.text;
+    lastFocused = document.activeElement;
+    overlay.classList.add('open');
+    modal.focus();
+  }
+
+  function closeHobbyModal(){
+    overlay.classList.remove('open');
+    if(lastFocused) lastFocused.focus();
+  }
+
+  document.querySelectorAll('.hobby-card').forEach(card=>{
+    card.addEventListener('click', () => openHobbyModal(card.dataset.hobby));
+    card.addEventListener('keydown', e => {
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        openHobbyModal(card.dataset.hobby);
+      }
+    });
+  });
+
+  overlay.addEventListener('click', closeHobbyModal);
+  document.addEventListener('keydown', e => {
+    if(e.key === 'Escape' && overlay.classList.contains('open')) closeHobbyModal();
+  });
+})();
+
+// 커스텀 커서: 이미지의 좌측 상단이 마우스 좌표(clientX, clientY)에 오도록 추적
+(function(){
+  if(!window.matchMedia('(pointer:fine)').matches) return;
+
+  const cursorEl = document.getElementById('customCursor');
+
+  document.addEventListener('mousemove', e => {
+    cursorEl.style.display = 'block';
+    cursorEl.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+  });
+
+  document.addEventListener('mouseleave', () => { cursorEl.style.display = 'none'; });
+})();
+
+// 커비 스프라이트: 평소엔 4번째 프레임(idle)로 정지, 클릭하면 14프레임 애니메이션 한 사이클 재생 후 idle로 복귀
+(function(){
+  const IDLE_INDEX = 3;
+  const TOTAL_FRAMES = 14;
+  const FRAME_DELAY = 90;
+  const framePaths = Array.from({ length: TOTAL_FRAMES }, (_, i) => `assets/kirby-anim/frame${String(i).padStart(2,'0')}.png`);
+
+  framePaths.forEach(src => { const img = new Image(); img.src = src; });
+
+  const sprite = document.getElementById('kirbySprite');
+  let animating = false;
+
+  function playCycle(){
+    if(animating) return;
+    animating = true;
+    let i = 0;
+    const timer = setInterval(() => {
+      sprite.src = framePaths[i];
+      i++;
+      if(i >= TOTAL_FRAMES){
+        clearInterval(timer);
+        setTimeout(() => {
+          sprite.src = framePaths[IDLE_INDEX];
+          animating = false;
+        }, FRAME_DELAY);
+      }
+    }, FRAME_DELAY);
+  }
+
+  sprite.addEventListener('click', playCycle);
+  sprite.addEventListener('keydown', e => {
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      playCycle();
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
