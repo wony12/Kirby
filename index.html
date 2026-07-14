@@ -11,12 +11,12 @@
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="윤지원 · YOON JIWON">
-<meta property="og:description" content="방가방가! 윤지원의 픽셀 자기소개 페이지예요 :)">
+<meta property="og:description" content="방가방가! 윤지원의 자기소개 페이지예요 :)">
 <meta property="og:image" content="https://yoon-jiwon-intro.vercel.app/assets/og-image.png">
 <meta property="og:url" content="https://yoon-jiwon-intro.vercel.app">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="윤지원 · YOON JIWON">
-<meta name="twitter:description" content="방가방가! 윤지원의 픽셀 자기소개 페이지예요 :)">
+<meta name="twitter:description" content="방가방가! 윤지원의 자기소개 페이지예요 :)">
 <meta name="twitter:image" content="https://yoon-jiwon-intro.vercel.app/assets/og-image.png">
 <style>
 @import url('https://cdn.jsdelivr.net/npm/galmuri/dist/galmuri.css');
@@ -498,6 +498,8 @@ body{
       text: '이건 제일 최근에 다녀온 호주! <br/>가 본 나라 : 중국 / 필리핀 / 태국 / 미국 / 캐나다 / 일본 / 호주 / 네덜란드(경유) '
     }
   };
+
+  Object.values(hobbyData).forEach(data => { const img = new Image(); img.src = data.img; });
 
   const overlay = document.getElementById('hobbyModalOverlay');
   const modal = overlay.querySelector('.hobby-modal');
